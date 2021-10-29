@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import fuzzysort from "fuzzysort";
-import { AppInput } from "./components/AppInput";
 import { AppTitle } from "./components/AppTitle";
 import { BloodtestForm } from "./components/BloodtestForm";
 import { FinalResult } from "./components/FinalResult";
@@ -46,9 +44,12 @@ export default function App() {
     loadTestConfig();
   }, []);
 
+  const getNameSuggestions = (value) =>
+    fuzzysort.go(value, testConfig, { key: "name" }).slice(0, 5);
+
   const handleCheck = (values) => {
     const { testName, testResult } = values;
-    const results = fuzzysort.go(testName, testConfig, { key: "name" });
+    const results = getNameSuggestions(testName);
     const result = results.length && results[0].obj;
     if (result) setResult({ ...result, testResult });
     else setResult({ name: "Unknown" });
@@ -60,7 +61,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <AppTitle>Am I OK?</AppTitle>
-      <BloodtestForm onSubmit={handleCheck} resetResult={resetResult} />
+      <BloodtestForm
+        onSubmit={handleCheck}
+        resetResult={resetResult}
+        getNameSuggestions={getNameSuggestions}
+      />
       {result && <FinalResult result={result} />}
     </View>
   );

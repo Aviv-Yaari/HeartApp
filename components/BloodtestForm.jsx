@@ -1,16 +1,19 @@
-import React from "react";
-import { Formik, useFormik } from "formik";
+import React, { useState } from "react";
+import { Formik } from "formik";
 import * as yup from "yup";
 import { AppInput } from "./AppInput";
-import { Button, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const validationSchema = yup.object({
   testName: yup.string().required("This field is required"),
   testResult: yup.string().required("This field is required"),
 });
 
-export function BloodtestForm({ onSubmit, resetResult }) {
+export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
+  const [suggestions, setSuggestions] = useState(null);
+
   const handleChange = (formikProps, fieldName, value) => {
+    if (fieldName === "testName") setSuggestions(getNameSuggestions(value));
     formikProps.setFieldValue(fieldName, value);
     resetResult();
   };
@@ -26,30 +29,53 @@ export function BloodtestForm({ onSubmit, resetResult }) {
     >
       {(props) => (
         <>
-          <AppInput
-            placeholder="Test Name"
-            value={props.testName}
-            onChangeText={(value) => handleChange(props, "testName", value)}
-            onBlur={props.handleBlur("testName")}
-            value={props.values.testName}
-          />
-          <Text>{props.touched.testName && props.errors.testName}</Text>
-          <AppInput
-            placeholder="Result"
-            value={props.testResult}
-            onChangeText={(value) => handleChange(props, "testResult", value)}
-            onBlur={props.handleBlur("testResult")}
-            value={props.values.testResult}
-            keyboardType="phone-pad"
-          />
-          <Text>{props.touched.testResult && props.errors.testResult}</Text>
-          <Button
-            title="Check"
-            accessibilityLabel="Check test results"
+          <View style={{ marginBottom: 10 }}>
+            <AppInput
+              placeholder="Test Name"
+              onChangeText={(value) => handleChange(props, "testName", value)}
+              onBlur={props.handleBlur("testName")}
+              value={props.values.testName}
+              error={props.touched.testName && props.errors.testName}
+              suggestions={suggestions}
+              onSuggestionPress={(value) => {
+                handleChange(props, "testName", value);
+                setSuggestions(null);
+              }}
+            />
+            <AppInput
+              editable={!suggestions}
+              placeholder="Result"
+              onChangeText={(value) => handleChange(props, "testResult", value)}
+              onBlur={props.handleBlur("testResult")}
+              value={props.values.testResult}
+              keyboardType="phone-pad"
+              error={props.touched.testResult && props.errors.testResult}
+            />
+          </View>
+          <Pressable
             onPress={props.handleSubmit}
-          />
+            style={styles.button}
+            disabled={!!suggestions}
+          >
+            <Text style={styles.buttonText}>Check test result</Text>
+          </Pressable>
         </>
       )}
     </Formik>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 10,
+    backgroundColor: "#51050F",
+    borderRadius: 6,
+    alignSelf: "flex-start",
+    elevation: 2,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "700",
+    textTransform: "uppercase",
+  },
+});
