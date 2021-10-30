@@ -60,9 +60,10 @@ const style = StyleSheet.create({
     borderColor: "#aaa",
     borderRadius: 4,
     padding: 10,
+    backgroundColor: "white",
   },
   errorInput: {
-    borderColor: "red",
+    borderColor: "#F23864",
   },
   suggestions: {
     position: "absolute",
@@ -78,12 +79,13 @@ const style = StyleSheet.create({
 
   suggestion: {
     padding: 10,
+    flexGrow: 1,
     borderColor: "#eee",
     borderBottomWidth: 1,
   },
   suggestionBoldLetter: {
     fontWeight: "bold",
-    color: "red",
+    color: "#F23864",
   },
   suggestionLetter: {
     fontWeight: "normal",

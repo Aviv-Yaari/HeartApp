@@ -11,6 +11,6 @@ export function ErrorText(props) {
 
 const style = StyleSheet.create({
   errorText: {
-    color: "red",
+    color: "#F23864",
   },
 });

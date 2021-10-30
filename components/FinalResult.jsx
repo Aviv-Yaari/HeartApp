@@ -1,8 +1,9 @@
 import { AppTitle } from "./AppTitle";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import HappyFaceImg from "../assets/happy-face.png";
-import SadFaceImg from "../assets/sad-face.png";
+import HappyFaceImg from "../assets/lottie/happy-face.json";
+import SadFaceImg from "../assets/lottie/sad-face.json";
+import LottieView from "lottie-react-native";
 
 export function FinalResult({ result }) {
   const getResultText = () => {
@@ -13,6 +14,14 @@ export function FinalResult({ result }) {
   const resultText = getResultText();
   return (
     <View style={styles.container}>
+      {resultText === "Good" && (
+        <LottieView
+          source={require("../assets/lottie/flying-hearts.json")}
+          autoPlay
+          loop={false}
+          speed={0.5}
+        />
+      )}
       <AppTitle style={styles.appTitle}>{resultText}</AppTitle>
       {resultText !== "Unknown" && (
         <Text>
@@ -23,9 +32,11 @@ export function FinalResult({ result }) {
         <Text>Test name not found. Please check your input and try again.</Text>
       )}
       {resultText !== "Unknown" && (
-        <Image
+        <LottieView
           style={styles.emojiImg}
           source={resultText === "Good" ? HappyFaceImg : SadFaceImg}
+          autoPlay={true}
+          loop={false}
         />
       )}
     </View>
@@ -33,7 +44,7 @@ export function FinalResult({ result }) {
 }
 
 const styles = StyleSheet.create({
-  container: { alignItems: "center", marginTop: 30 },
+  container: { alignItems: "center", marginTop: 30, flexGrow: 1 },
   appTitle: { fontSize: 24, marginBottom: 10 },
   emojiImg: {
     width: 150,

@@ -11,5 +11,6 @@ const style = StyleSheet.create({
     textAlign: "center",
     fontSize: 32,
     fontWeight: "bold",
+    color: "#F23864",
   },
 });

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { AppInput } from "./AppInput";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
 
 const validationSchema = yup.object({
   testName: yup.string().required("This field is required"),
@@ -23,6 +23,7 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
       initialValues={{ testName: "", testResult: "" }}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
+        Keyboard.dismiss();
         const result = onSubmit(values);
         if (result) actions.setFieldValue("testName", result.name);
       }}
@@ -43,7 +44,7 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
               }}
             />
             <AppInput
-              editable={!suggestions}
+              editable={!suggestions?.length}
               placeholder="Result"
               onChangeText={(value) => handleChange(props, "testResult", value)}
               onBlur={props.handleBlur("testResult")}
@@ -55,7 +56,7 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
           <Pressable
             onPress={props.handleSubmit}
             style={styles.button}
-            disabled={!!suggestions}
+            disabled={!!suggestions?.length}
           >
             <Text style={styles.buttonText}>Check test result</Text>
           </Pressable>
@@ -68,14 +69,13 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
 const styles = StyleSheet.create({
   button: {
     padding: 10,
-    backgroundColor: "#51050F",
+    backgroundColor: "#1597E5",
     borderRadius: 6,
     alignSelf: "flex-start",
     elevation: 2,
   },
   buttonText: {
     color: "white",
-    fontWeight: "700",
     textTransform: "uppercase",
   },
 });
