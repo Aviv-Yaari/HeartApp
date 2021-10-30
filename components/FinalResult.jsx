@@ -1,9 +1,10 @@
 import { AppTitle } from "./AppTitle";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import HappyFaceImg from "../assets/lottie/happy-face.json";
-import SadFaceImg from "../assets/lottie/sad-face.json";
+import { StyleSheet, Text, View } from "react-native";
+import HappyFaceAnimation from "../assets/lottie/happy-face.json";
+import SadFaceAnimation from "../assets/lottie/sad-face.json";
 import LottieView from "lottie-react-native";
+import FlyingHeartsAnimation from "../assets/lottie/flying-hearts.json";
 
 export function FinalResult({ result }) {
   const getResultText = () => {
@@ -16,28 +17,30 @@ export function FinalResult({ result }) {
     <View style={styles.container}>
       {resultText === "Good" && (
         <LottieView
-          source={require("../assets/lottie/flying-hearts.json")}
+          source={FlyingHeartsAnimation}
           autoPlay
           loop={false}
           speed={0.5}
         />
       )}
-      <AppTitle style={styles.appTitle}>{resultText}</AppTitle>
-      {resultText !== "Unknown" && (
-        <Text>
-          The threshold for {result.name} is {result.threshold}.
-        </Text>
-      )}
+      <AppTitle style={styles.appTitle}>{resultText}!</AppTitle>
       {resultText === "Unknown" && (
         <Text>Test name not found. Please check your input and try again.</Text>
       )}
       {resultText !== "Unknown" && (
-        <LottieView
-          style={styles.emojiImg}
-          source={resultText === "Good" ? HappyFaceImg : SadFaceImg}
-          autoPlay={true}
-          loop={false}
-        />
+        <>
+          <Text>
+            The threshold for {result.name} is {result.threshold}.
+          </Text>
+          <LottieView
+            style={styles.emojiImg}
+            source={
+              resultText === "Good" ? HappyFaceAnimation : SadFaceAnimation
+            }
+            autoPlay={true}
+            loop={false}
+          />
+        </>
       )}
     </View>
   );

@@ -1,15 +1,16 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { COLOR_1 } from "../styles/base";
 import { ErrorText } from "./ErrorText";
 
 export function AppInput(props) {
   const { error, suggestions, onSuggestionPress } = props;
 
   return (
-    <View style={style.container}>
+    <View style={styles.container}>
       <TextInput
         {...props}
-        style={[style.input, error && style.errorInput, props.style]}
+        style={[styles.input, error && styles.errorInput, props.style]}
       />
       {error && <ErrorText>{error}</ErrorText>}
       {suggestions?.length > 0 && (
@@ -24,11 +25,14 @@ export function AppInput(props) {
 
 const Suggestions = ({ suggestions, onSuggestionPress }) => {
   return (
-    <View style={style.suggestions}>
+    <View style={styles.suggestions}>
       {suggestions.map((suggestion, idx) => (
         <Pressable
           key={idx}
-          style={style.suggestion}
+          style={({ pressed }) => [
+            styles.suggestion,
+            { backgroundColor: pressed ? "#eee" : "#fff" },
+          ]}
           onPress={() => onSuggestionPress(suggestion.obj.name)}
         >
           <Text>
@@ -37,8 +41,8 @@ const Suggestions = ({ suggestions, onSuggestionPress }) => {
                 key={idx}
                 style={
                   suggestion.indexes.includes(idx)
-                    ? style.suggestionBoldLetter
-                    : style.suggestionLetter
+                    ? styles.suggestionBoldLetter
+                    : styles.suggestionLetter
                 }
               >
                 {letter}
@@ -51,7 +55,7 @@ const Suggestions = ({ suggestions, onSuggestionPress }) => {
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     marginVertical: 5,
   },
@@ -63,7 +67,7 @@ const style = StyleSheet.create({
     backgroundColor: "white",
   },
   errorInput: {
-    borderColor: "#F23864",
+    borderColor: COLOR_1,
   },
   suggestions: {
     position: "absolute",
@@ -74,18 +78,16 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eee",
     elevation: 3,
-    zIndex: 1,
   },
-
   suggestion: {
     padding: 10,
-    flexGrow: 1,
+    flex: 1,
     borderColor: "#eee",
     borderBottomWidth: 1,
   },
   suggestionBoldLetter: {
     fontWeight: "bold",
-    color: "#F23864",
+    color: COLOR_1,
   },
   suggestionLetter: {
     fontWeight: "normal",

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Keyboard,
   StyleSheet,
   Text,
@@ -14,8 +13,9 @@ import LottieView from "lottie-react-native";
 import { AppTitle } from "./components/AppTitle";
 import { BloodtestForm } from "./components/BloodtestForm";
 import { FinalResult } from "./components/FinalResult";
-
-// import DUMMY_DATA from "./dummydata"; // for dev
+import LoadingAnimation from "./assets/lottie/heart.json";
+import BackgroundAnimation from "./assets/lottie/background.json";
+// import DUMMY_DATA from "./dummydata"; // for dev purposes
 
 export default function App() {
   const [testConfig, setTestConfig] = useState(null);
@@ -30,20 +30,19 @@ export default function App() {
         const res = await axios.get(url);
         await new Promise((resolve) => setTimeout(resolve, 2000)); // simulate delay
         setTestConfig(res.data.bloodTestConfig);
-        // setTestConfig(DUMMY_DATA.bloodTestConfig); // for dev:
+        // setTestConfig(DUMMY_DATA.bloodTestConfig); // for dev purposes:
       } catch (err) {
         console.error(err);
         setError(err);
-        // TODO - show error message with snackbar or something
       }
     };
     loadTestConfig();
   }, []);
 
   const getNameSuggestions = (value) =>
-    fuzzysort.go(value, testConfig, { key: "name" }).slice(0, 5);
+    fuzzysort.go(value, testConfig, { key: "name" }).slice(0, 5); // limit to top 5 results
 
-  const handleCheck = (values) => {
+  const handleCheckResult = (values) => {
     const { testName, testResult } = values;
     const results = getNameSuggestions(testName);
     const result = results.length && results[0].obj;
@@ -57,53 +56,49 @@ export default function App() {
   if (error)
     return (
       <View style={styles.container}>
-        <AppTitle>Oops!</AppTitle>
-        <Text style={{ textAlign: "center" }}>
-          an error occured. Please try again later.
-        </Text>
+        <AppTitle>Oops! An error occured</AppTitle>
+        <Text style={{ textAlign: "center" }}>Please try again later.</Text>
       </View>
     );
 
   if (!testConfig)
     return (
-      <View style={styles.spinnerContainer}>
+      <View style={styles.loadingContainer}>
         <LottieView
-          source={require("./assets/lottie/heart.json")}
-          style={styles.spinner}
+          source={LoadingAnimation}
+          style={styles.loadingSpinner}
           autoPlay
         />
       </View>
     );
 
   return (
-    <>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <LottieView
-            source={require("./assets/lottie/background.json")}
-            style={styles.backgroundAnimation}
-            autoPlay={true}
-            loop={true}
-          />
-          <Animatable.Text
-            animation="pulse"
-            iterationCount="infinite"
-            easing="ease-in-out"
-            iterationDelay={4000}
-            duration={2000}
-            style={{ textAlign: "center", marginVertical: 20 }}
-          >
-            <AppTitle>Am I OK?</AppTitle>
-          </Animatable.Text>
-          <BloodtestForm
-            onSubmit={handleCheck}
-            resetResult={resetResult}
-            getNameSuggestions={getNameSuggestions}
-          />
-          {result && <FinalResult result={result} />}
-        </View>
-      </TouchableWithoutFeedback>
-    </>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <LottieView
+          source={BackgroundAnimation}
+          style={styles.backgroundAnimation}
+          autoPlay={true}
+          loop={true}
+        />
+        <Animatable.Text
+          animation="pulse"
+          iterationCount="infinite"
+          easing="ease-in-out"
+          iterationDelay={2000}
+          duration={2000}
+          style={{ textAlign: "center", marginVertical: 20 }}
+        >
+          <AppTitle>Am I OK?</AppTitle>
+        </Animatable.Text>
+        <BloodtestForm
+          onSubmit={handleCheckResult}
+          resetResult={resetResult}
+          getNameSuggestions={getNameSuggestions}
+        />
+        {result && <FinalResult result={result} />}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -112,13 +107,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 50,
     paddingVertical: 50,
+    backgroundColor: "#D1E8E4",
   },
-  spinnerContainer: {
+  loadingContainer: {
     justifyContent: "center",
     alignItems: "center",
-    flexGrow: 1,
+    flex: 1,
   },
-  spinner: {
+  loadingSpinner: {
     width: 150,
     height: 150,
   },
@@ -128,6 +124,5 @@ const styles = StyleSheet.create({
     bottom: -320,
     left: 0,
     right: 0,
-    backgroundColor: "#D1E8E4",
   },
 });

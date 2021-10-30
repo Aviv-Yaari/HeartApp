@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { AppInput } from "./AppInput";
+import _ from "lodash";
 import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
+import { COLOR_1, COLOR_2 } from "../styles/base";
 
 const validationSchema = yup.object({
   testName: yup.string().required("This field is required"),
-  testResult: yup.string().required("This field is required"),
+  testResult: yup
+    .number()
+    .typeError("This field must be a number")
+    .required("This field is required"),
 });
 
 export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
@@ -15,6 +20,11 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
   const handleChange = (formikProps, fieldName, value) => {
     if (fieldName === "testName") setSuggestions(getNameSuggestions(value));
     formikProps.setFieldValue(fieldName, value);
+    resetResult();
+  };
+
+  const handleReset = (formikProps) => {
+    formikProps.resetForm();
     resetResult();
   };
 
@@ -49,17 +59,31 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
               onChangeText={(value) => handleChange(props, "testResult", value)}
               onBlur={props.handleBlur("testResult")}
               value={props.values.testResult}
-              keyboardType="phone-pad"
+              keyboardType="number-pad"
+              contextMenuHidden={true}
               error={props.touched.testResult && props.errors.testResult}
             />
           </View>
-          <Pressable
-            onPress={props.handleSubmit}
-            style={styles.button}
-            disabled={!!suggestions?.length}
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.buttonText}>Check test result</Text>
-          </Pressable>
+            <Pressable
+              onPress={props.handleSubmit}
+              style={[
+                styles.submitButton,
+                !_.isEmpty(props.errors) && styles.disabledButton,
+              ]}
+              disabled={!!suggestions?.length || !_.isEmpty(props.errors)}
+            >
+              <Text style={styles.buttonText}>Check test result</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.submitButton, styles.resetButton]}
+              onPress={() => handleReset(props)}
+            >
+              <Text style={styles.buttonText}>Reset</Text>
+            </Pressable>
+          </View>
         </>
       )}
     </Formik>
@@ -67,13 +91,18 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
 }
 
 const styles = StyleSheet.create({
-  button: {
+  submitButton: {
     padding: 10,
-    backgroundColor: "#1597E5",
-    borderRadius: 6,
-    alignSelf: "flex-start",
+    backgroundColor: COLOR_2,
+    borderRadius: 5,
     elevation: 2,
   },
+  resetButton: {
+    backgroundColor: "#b0b0b0",
+    elevation: 0,
+    borderRadius: 20,
+  },
+  disabledButton: { backgroundColor: "#ccc" },
   buttonText: {
     color: "white",
     textTransform: "uppercase",

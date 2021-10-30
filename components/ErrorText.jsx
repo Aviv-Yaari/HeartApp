@@ -1,16 +1,17 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
+import { COLOR_1 } from "../styles/base";
 
 export function ErrorText(props) {
   return (
-    <Text {...props} style={{ ...style.errorText, ...props.style }}>
+    <Text {...props} style={{ ...styles.errorText, ...props.style }}>
       {props.children}
     </Text>
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   errorText: {
-    color: "#F23864",
+    color: COLOR_1,
   },
 });
