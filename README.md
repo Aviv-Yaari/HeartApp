@@ -30,4 +30,5 @@ yarn global add expo-cli
 4. In your browser, scan the QR code on the bottom left corner of the screen with your phone (you might be prompted to install the Expo App on your phone first), or choose "Run On Android / iOS Simulator" (if you have one installed on your machine).  
 
 5. For the "Upload" feature I reccommend using this example photo, because it's easy to extract the text from:  
-https://res.cloudinary.com/avivyaari/image/upload/v1635689044/agp7pymga4qp1ae69n85.jpg
+![agp7pymga4qp1ae69n85](https://user-images.githubusercontent.com/84678031/139602698-c1663610-7c65-41ee-8923-749975748631.jpg)
+(https://user-images.githubusercontent.com/84678031/139602698-c1663610-7c65-41ee-8923-749975748631.jpg)
