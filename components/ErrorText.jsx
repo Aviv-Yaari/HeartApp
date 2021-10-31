@@ -1,6 +1,6 @@
-import React from "react";
-import { StyleSheet, Text } from "react-native";
-import { COLOR_1 } from "../styles/base";
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { COLOR_PRIMARY_1 } from '../styles/base';
 
 export function ErrorText(props) {
   return (
@@ -12,6 +12,6 @@ export function ErrorText(props) {
 
 const styles = StyleSheet.create({
   errorText: {
-    color: COLOR_1,
+    color: COLOR_PRIMARY_1,
   },
 });

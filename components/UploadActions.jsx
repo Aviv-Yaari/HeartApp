@@ -1,8 +1,8 @@
-import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { mindeeService } from "../services/mindee.service";
-import { View } from "react-native-animatable";
+import React from 'react';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { mindeeService } from '../services/mindee.service';
+import { View } from 'react-native-animatable';
 
 export function UploadActions({ handleCheckResult, setValues, setIsLoading }) {
   const handleUploadImage = async () => {
@@ -17,8 +17,8 @@ export function UploadActions({ handleCheckResult, setValues, setIsLoading }) {
       setIsLoading(true);
       const base64Img = `data:image/jpg;base64,${result.base64}`;
       const prediction = await mindeeService.getOCR(base64Img);
-      handleCheckResult({ testName: prediction.test_name, testResult: prediction.test_result });
-      setValues({ testName: prediction.test_name, testResult: prediction.test_result });
+      const bestSuggestion = handleCheckResult({ testName: prediction.test_name, testResult: prediction.test_result });
+      setValues({ testName: bestSuggestion?.name || prediction.test_name, testResult: prediction.test_result });
       setIsLoading(false);
     } catch (err) {
       console.error(err);
@@ -37,7 +37,7 @@ export function UploadActions({ handleCheckResult, setValues, setIsLoading }) {
 
 const styles = StyleSheet.create({
   uploadActions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
