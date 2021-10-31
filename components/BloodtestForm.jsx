@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { AppInput } from "./AppInput";
 import _ from "lodash";
 import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
-import { COLOR_1, COLOR_2 } from "../styles/base";
+import { COLOR_2 } from "../styles/base";
 
 const validationSchema = yup.object({
   testName: yup.string().required("This field is required"),
@@ -64,15 +64,10 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
               error={props.touched.testResult && props.errors.testResult}
             />
           </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Pressable
               onPress={props.handleSubmit}
-              style={[
-                styles.submitButton,
-                !_.isEmpty(props.errors) && styles.disabledButton,
-              ]}
+              style={[styles.submitButton, !_.isEmpty(props.errors) && styles.disabledButton]}
               disabled={!!suggestions?.length || !_.isEmpty(props.errors)}
             >
               <Text style={styles.buttonText}>Check test result</Text>

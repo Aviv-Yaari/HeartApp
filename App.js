@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import axios from "axios";
 import fuzzysort from "fuzzysort";
@@ -25,8 +19,7 @@ export default function App() {
   useEffect(() => {
     const loadTestConfig = async () => {
       try {
-        const url =
-          "https://s3.amazonaws.com/s3.helloheart.home.assignment/bloodTestConfig.json";
+        const url = "https://s3.amazonaws.com/s3.helloheart.home.assignment/bloodTestConfig.json";
         const res = await axios.get(url);
         await new Promise((resolve) => setTimeout(resolve, 2000)); // simulate delay
         setTestConfig(res.data.bloodTestConfig);
@@ -39,8 +32,24 @@ export default function App() {
     loadTestConfig();
   }, []);
 
-  const getNameSuggestions = (value) =>
-    fuzzysort.go(value, testConfig, { key: "name" }).slice(0, 5); // limit to top 5 results
+  const getNameSuggestions = (query) => {
+    const words = query.match(/[a-z'\-]+/gi) || [];
+    const options = {
+      key: "name",
+      allowTypo: true,
+      limit: 3,
+    };
+    const results = words.map((word) => fuzzysort.go(word, testConfig, options)); // search each word separately
+    results.push(fuzzysort.go(query, testConfig, options)); // search entire sentence
+    const map = {};
+    return results
+      .flat()
+      .sort((a, b) => b.score - a.score)
+      .sort((a, b) => b.indexes.length - a.indexes.length) // sort by scores, then by common letters
+      .filter(
+        (result) => (map.hasOwnProperty(result.target) ? false : (map[result.target] = true)) // remove duplicates
+      );
+  };
 
   const handleCheckResult = (values) => {
     const { testName, testResult } = values;
@@ -64,11 +73,7 @@ export default function App() {
   if (!testConfig)
     return (
       <View style={styles.loadingContainer}>
-        <LottieView
-          source={LoadingAnimation}
-          style={styles.loadingSpinner}
-          autoPlay
-        />
+        <LottieView source={LoadingAnimation} style={styles.loadingSpinner} autoPlay />
       </View>
     );
 
