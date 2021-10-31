@@ -20,6 +20,11 @@ npm start
 or
 yarn start
 ```
-Expo DevTools should open in your browser.
+Expo DevTools should open in your browser. If it doesn't, you might need to install the Expo CLI (if you haven't already):
+```
+npm install --global expo-cli
+or
+yarn global add expo-cli
+```
 
-4. Scan the QR code on the bottom left corner with your phone (you might be prompted to install the Expo App first), or choose Run On Android / iOS Simulator (if you have one installed on your machine).
+4. In your browser, scan the QR code on the bottom left corner of the screen with your phone (you might be prompted to install the Expo App on your phone first), or choose "Run On Android / iOS Simulator" (if you have one installed on your machine).
