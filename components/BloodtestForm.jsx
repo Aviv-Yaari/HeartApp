@@ -14,7 +14,7 @@ const validationSchema = yup.object({
     .required("This field is required"),
 });
 
-export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
+export function BloodtestForm({ values, setValues, onSubmit, resetResult, getNameSuggestions }) {
   const [suggestions, setSuggestions] = useState(null);
 
   const handleChange = (formikProps, fieldName, value) => {
@@ -24,14 +24,16 @@ export function BloodtestForm({ onSubmit, resetResult, getNameSuggestions }) {
   };
 
   const handleReset = (formikProps) => {
+    setValues({ testName: "", testResult: "" });
     formikProps.resetForm();
     resetResult();
   };
 
   return (
     <Formik
-      initialValues={{ testName: "", testResult: "" }}
+      initialValues={values}
       validationSchema={validationSchema}
+      enableReinitialize={true}
       onSubmit={(values, actions) => {
         Keyboard.dismiss();
         const result = onSubmit(values);

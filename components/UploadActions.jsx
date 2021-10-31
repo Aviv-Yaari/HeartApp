@@ -1,11 +1,10 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { cloudinaryService } from "../services/cloudinary.service";
 import { mindeeService } from "../services/mindee.service";
 import { View } from "react-native-animatable";
 
-export function UploadActions({ handleCheckResult }) {
+export function UploadActions({ handleCheckResult, setValues, setIsLoading }) {
   const handleUploadImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -15,12 +14,15 @@ export function UploadActions({ handleCheckResult }) {
         quality: 1,
       });
       if (result.cancelled) return;
+      setIsLoading(true);
       const base64Img = `data:image/jpg;base64,${result.base64}`;
-      const cloudinaryImgUrl = await cloudinaryService.uploadImg(base64Img);
-      const prediction = await mindeeService.getOCR(cloudinaryImgUrl);
+      const prediction = await mindeeService.getOCR(base64Img);
       handleCheckResult({ testName: prediction.test_name, testResult: prediction.test_result });
+      setValues({ testName: prediction.test_name, testResult: prediction.test_result });
+      setIsLoading(false);
     } catch (err) {
       console.error(err);
+      setIsLoading(false);
     }
   };
 

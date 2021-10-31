@@ -16,6 +16,8 @@ import { UploadActions } from "./components/UploadActions";
 export default function App() {
   const [testConfig, setTestConfig] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [values, setValues] = useState({ testName: "", testResult: "" });
   const [result, setResult] = useState(null);
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export default function App() {
       </View>
     );
 
-  if (!testConfig)
+  if (!testConfig || isLoading)
     return (
       <View style={styles.loadingContainer}>
         <LottieView source={LoadingAnimation} style={styles.loadingSpinner} autoPlay />
@@ -88,7 +90,11 @@ export default function App() {
           autoPlay={true}
           loop={true}
         />
-        <UploadActions handleCheckResult={handleCheckResult} />
+        <UploadActions
+          handleCheckResult={handleCheckResult}
+          setValues={setValues}
+          setIsLoading={setIsLoading}
+        />
         <Animatable.Text
           animation="pulse"
           iterationCount="infinite"
@@ -100,6 +106,8 @@ export default function App() {
           <AppTitle>Am I OK?</AppTitle>
         </Animatable.Text>
         <BloodtestForm
+          values={values}
+          setValues={setValues}
           onSubmit={handleCheckResult}
           resetResult={resetResult}
           getNameSuggestions={getNameSuggestions}
