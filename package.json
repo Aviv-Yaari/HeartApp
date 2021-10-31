@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "expo": "~43.0.0",
+    "expo-image-picker": "^11.0.3",
     "expo-status-bar": "~1.1.0",
     "formik": "^2.2.9",
     "fuzzysort": "^1.1.4",

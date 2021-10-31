@@ -16,12 +16,7 @@ export function FinalResult({ result }) {
   return (
     <View style={styles.container}>
       {resultText === "Good" && (
-        <LottieView
-          source={FlyingHeartsAnimation}
-          autoPlay
-          loop={false}
-          speed={0.5}
-        />
+        <LottieView source={FlyingHeartsAnimation} autoPlay loop={false} speed={0.5} />
       )}
       <AppTitle style={styles.appTitle}>{resultText}!</AppTitle>
       {resultText === "Unknown" && (
@@ -32,11 +27,10 @@ export function FinalResult({ result }) {
           <Text>
             The threshold for {result.name} is {result.threshold}.
           </Text>
+          <Text>You scored {result.testResult}.</Text>
           <LottieView
             style={styles.emojiImg}
-            source={
-              resultText === "Good" ? HappyFaceAnimation : SadFaceAnimation
-            }
+            source={resultText === "Good" ? HappyFaceAnimation : SadFaceAnimation}
             autoPlay={true}
             loop={false}
           />

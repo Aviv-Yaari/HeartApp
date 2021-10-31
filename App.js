@@ -9,6 +9,8 @@ import { BloodtestForm } from "./components/BloodtestForm";
 import { FinalResult } from "./components/FinalResult";
 import LoadingAnimation from "./assets/lottie/heart.json";
 import BackgroundAnimation from "./assets/lottie/background.json";
+import { UploadActions } from "./components/UploadActions";
+
 // import DUMMY_DATA from "./dummydata"; // for dev purposes
 
 export default function App() {
@@ -86,6 +88,7 @@ export default function App() {
           autoPlay={true}
           loop={true}
         />
+        <UploadActions handleCheckResult={handleCheckResult} />
         <Animatable.Text
           animation="pulse"
           iterationCount="infinite"
@@ -110,8 +113,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 50,
-    paddingVertical: 50,
+    padding: 50,
     backgroundColor: "#D1E8E4",
   },
   loadingContainer: {
