@@ -13,6 +13,7 @@ async function getConfig() {
     // setTestConfig(DUMMY_DATA.bloodTestConfig); // for dev purposes:
   } catch (err) {
     console.error('Error fetching blood test config:', err);
+    throw err;
   }
 }
 
